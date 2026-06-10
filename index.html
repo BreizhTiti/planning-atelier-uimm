@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
+<html lang="fr"><head>
 <meta charset="UTF-8">
 <title>Planning Atelier UIMM Brest</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -136,11 +135,27 @@ th:first-child,td:first-child{position:sticky;left:0;z-index:3;background:#EDF2F
 <footer class="footer-credit">© 2026 - Développé par Titouan & Thibaut</footer>
 </div>
 
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBUti219soaq0jxIDAr6sbvEYhKi6heJ5Y",
+  authDomain: "uimm-audite.firebaseapp.com",
+  projectId: "uimm-audite",
+  storageBucket: "uimm-audite.firebasestorage.app",
+  messagingSenderId: "514331357345",
+  appId: "1:514331357345:web:5ff5c79da2b73ccebe00e"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 const horaires=["08h-09h","09h-10h","10h-11h","11h-12h","13h-14h","14h-15h","15h-16h","16h-17h"];
 const zones=["Zone A","Zone B","Zone C","Zone D","Zone E","Zone F","Zone G","Zone H","Zone I","Zone J","Zone K"];
 
-let classes=JSON.parse(localStorage.getItem("classes"))||[
+const classesParDefaut=[
 {nom:"BacPro MELEC",couleur:"#005B84"},
 {nom:"BTS MS SP",couleur:"#E30613"},
 {nom:"BTS ELT",couleur:"#0077A3"},
@@ -153,9 +168,16 @@ let classes=JSON.parse(localStorage.getItem("classes"))||[
 {nom:"IFTI",couleur:"#0F766E"}
 ];
 
-let reservations=JSON.parse(localStorage.getItem("reservations"))||[];
+let classes=[];
+let reservations=[];
 let dateCourante=new Date();
 let selection=null;
+let firebaseLance=false;
+let dateListenerAjoute=false;
+
+function idClasse(nom){
+  return nom.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9_-]/g,"_");
+}
 
 function connexion(){
   const u=document.getElementById("loginUser").value;
@@ -181,11 +203,6 @@ function afficherApp(){
 }
 
 if(localStorage.getItem("connecte")==="oui"){afficherApp();}
-
-function save(){
-  localStorage.setItem("classes",JSON.stringify(classes));
-  localStorage.setItem("reservations",JSON.stringify(reservations));
-}
 
 function iso(d){
   const date=new Date(d);
@@ -226,6 +243,35 @@ function remplirMenus(){
   classeInput.innerHTML=classes.map(c=>`<option>${c.nom}</option>`).join("");
 }
 
+function chargerClassesFirebase(){
+  db.collection("classes").orderBy("ordre").onSnapshot(snapshot=>{
+    if(snapshot.empty){
+      classesParDefaut.forEach((c,index)=>{
+        db.collection("classes").doc(idClasse(c.nom)).set({nom:c.nom,couleur:c.couleur,ordre:index});
+      });
+      return;
+    }
+    classes=[];
+    snapshot.forEach(document=>{
+      classes.push({firebaseId:document.id,...document.data()});
+    });
+    remplirMenus();
+    afficherClasses();
+    afficherLegend();
+    afficherPlanning();
+  });
+}
+
+function chargerReservationsFirebase(){
+  db.collection("reservations").onSnapshot(snapshot=>{
+    reservations=[];
+    snapshot.forEach(document=>{
+      reservations.push({firebaseId:document.id,...document.data()});
+    });
+    afficherPlanning();
+  });
+}
+
 function afficherLegend(){
   legend.innerHTML=classes.map(c=>`
     <span class="legend-item">
@@ -245,8 +291,7 @@ function afficherClasses(){
         msg("Impossible de supprimer : cette classe a déjà des réservations.","#E30613");
         return;
       }
-      classes=classes.filter(x=>x.nom!==c.nom);
-      save();remplirMenus();afficherClasses();afficherLegend();afficherPlanning();
+      db.collection("classes").doc(c.firebaseId).delete();
       msg("Classe supprimée.","green");
     };
     listeClasses.appendChild(div);
@@ -260,9 +305,8 @@ function ajouterClasse(){
   if(classes.some(c=>c.nom.toLowerCase()===nom.toLowerCase())){
     msg("Cette classe existe déjà.","#E30613");return;
   }
-  classes.push({nom,couleur});
+  db.collection("classes").doc(idClasse(nom)).set({nom,couleur,ordre:Date.now()});
   newClassInput.value="";
-  save();remplirMenus();afficherClasses();afficherLegend();afficherPlanning();
   msg("Classe ajoutée.","green");
 }
 
@@ -291,32 +335,27 @@ function ajouterReservation(){
   }
 
   const conflit=reservations.find(r=>r.date===date&&r.horaire===horaire&&r.zone===zone);
-
-  if(conflit&&conflit.id!==selection){
+  if(conflit&&conflit.firebaseId!==selection){
     msg(`Erreur : ${zone} est déjà réservée par ${conflit.classe} le ${belleDate(date)} ${horaire}.`,"#E30613");
     return;
   }
 
   if(selection){
-    const r=reservations.find(x=>x.id===selection);
-    r.date=date;r.horaire=horaire;r.zone=zone;r.classe=classe;r.commentaire=commentaire;
+    db.collection("reservations").doc(selection).update({date,horaire,zone,classe,commentaire,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
     msg("Réservation modifiée.","green");
   }else{
-    reservations.push({id:Date.now(),date,horaire,zone,classe,commentaire});
+    db.collection("reservations").add({date,horaire,zone,classe,commentaire,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
     msg("Réservation ajoutée.","green");
   }
-
   dateCourante=new Date(date);
   selection=null;
-  save();
   afficherPlanning();
 }
 
 function supprimerReservation(){
   if(!selection){msg("Clique d’abord sur une réservation.","#E30613");return;}
-  reservations=reservations.filter(r=>r.id!==selection);
+  db.collection("reservations").doc(selection).delete();
   selection=null;
-  save();
   afficherPlanning();
   msg("Réservation supprimée.","green");
 }
@@ -333,7 +372,7 @@ function preRemplir(date,horaire,zone){
 }
 
 function selectionner(id){
-  const r=reservations.find(x=>x.id===id);
+  const r=reservations.find(x=>x.firebaseId===id);
   if(!r)return;
   selection=id;
   dateInput.value=r.date;
@@ -348,11 +387,9 @@ function selectionner(id){
 function afficherPlanning(){
   const date=iso(dateCourante);
   titreJour.textContent=belleDate(date);
-
   let html="<tr><th>Zone / Horaire</th>";
   horaires.forEach(h=>{html+=`<th>${h}</th>`;});
   html+="</tr>";
-
   zones.forEach(z=>{
     html+=`<tr><td>${z}</td>`;
     horaires.forEach(h=>{
@@ -360,28 +397,34 @@ function afficherPlanning(){
       if(r){
         const c=classes.find(x=>x.nom===r.classe)||{couleur:"#555"};
         const title=(r.commentaire||"").replaceAll('"',"'");
-        html+=`<td><div class="resa" style="background:${c.couleur}" onclick="selectionner(${r.id})" title="${title}">${r.classe}${r.commentaire?`<div class="comment">${r.commentaire}</div>`:""}</div></td>`;
+        html+=`<td><div class="resa" style="background:${c.couleur}" onclick="selectionner('${r.firebaseId}')" title="${title}">${r.classe}${r.commentaire?`<div class="comment">${r.commentaire}</div>`:""}</div></td>`;
       }else{
         html+=`<td class="empty" onclick="preRemplir('${date}','${h}','${z}')"></td>`;
       }
     });
     html+="</tr>";
   });
-
   planning.innerHTML=html;
 }
 
 function init(){
   dateInput.value=iso(dateCourante);
   remplirMenus();
-  afficherClasses();
-  afficherLegend();
   afficherPlanning();
-  dateInput.addEventListener("change",()=>{
-    dateCourante=new Date(dateInput.value);
-    afficherPlanning();
-  });
+  if(!firebaseLance){
+    firebaseLance=true;
+    chargerClassesFirebase();
+    chargerReservationsFirebase();
+  }
+  if(!dateListenerAjoute){
+    dateListenerAjoute=true;
+    dateInput.addEventListener("change",()=>{
+      dateCourante=new Date(dateInput.value);
+      afficherPlanning();
+    });
+  }
 }
 </script>
+
 </body>
 </html>
