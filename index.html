@@ -193,6 +193,401 @@ th:first-child,td:first-child{position:sticky;left:0;background:#EDF2F6;color:#1
 .sortable-th:hover{filter:brightness(1.12)}
 .sort-indicator{font-size:11px;opacity:.9;margin-left:5px}
 
+
+/* --- Refonte visuelle douce --- */
+:root{
+  --bg:#EEF3F8;
+  --card:#FFFFFF;
+  --shadow:0 14px 38px rgba(0,42,70,.12);
+}
+body{
+  background:
+    radial-gradient(circle at top left, rgba(0,91,132,.10), transparent 35%),
+    linear-gradient(180deg,#F8FBFD 0%,#EEF3F8 100%);
+}
+header{
+  border-bottom:1px solid rgba(216,222,230,.85);
+  backdrop-filter:blur(12px);
+}
+.brand h1{
+  font-size:34px;
+  letter-spacing:-.8px;
+}
+.nav{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.nav button{
+  border-radius:16px;
+  padding:12px 17px;
+}
+.card,.tile,.kpi,.home-preview{
+  border:1px solid rgba(216,222,230,.9);
+  box-shadow:0 12px 35px rgba(0,42,70,.10);
+}
+.tile{
+  background:linear-gradient(180deg,#fff 0%,#F8FBFD 100%);
+}
+.tile:hover{
+  transform:translateY(-4px);
+  box-shadow:0 18px 45px rgba(0,42,70,.16);
+}
+.toolbar{
+  background:rgba(255,255,255,.75);
+  border:1px solid rgba(216,222,230,.9);
+  padding:12px;
+  border-radius:20px;
+  box-shadow:0 8px 24px rgba(0,42,70,.08);
+}
+.table-wrap{
+  background:white;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+}
+th{
+  background:linear-gradient(180deg,var(--blue) 0%,var(--blue2) 100%);
+}
+.btn,.btn-light,.btn-red,.btn-green,.btn-orange{
+  box-shadow:0 6px 16px rgba(0,42,70,.10);
+}
+.btn-light:hover{
+  background:#DDE7EF;
+}
+.footer{
+  backdrop-filter:blur(10px);
+}
+.om-topbar{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+.om-tabs{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:10px;
+  box-shadow:var(--shadow);
+}
+.om-tabs label{
+  margin:0;
+  font-weight:900;
+  color:var(--blue2);
+}
+.om-tabs select{
+  width:auto;
+  min-width:180px;
+  margin:0;
+}
+.om-subtitle{
+  color:var(--muted);
+  margin-top:4px;
+}
+.status-pill{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:6px 10px;
+  font-weight:900;
+  font-size:12px;
+  border:1px solid var(--border);
+}
+.status-todo{background:#fff7ed;color:#c2410c;border-color:#fed7aa}
+.status-progress{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+.status-done{background:#ecfdf5;color:#047857;border-color:#a7f3d0}
+.history-desc{
+  max-width:360px;
+  text-align:left;
+  white-space:normal;
+  line-height:1.35;
+}
+.history-actions button{width:auto}
+
+
+/* --- Design épuré final --- */
+:root{
+  --blue:#005B84;
+  --blue2:#003F5E;
+  --red:#E30613;
+  --bg:#F3F6F9;
+  --card:#FFFFFF;
+  --border:#E3E8EF;
+  --text:#172033;
+  --muted:#697386;
+  --green:#0F766E;
+  --orange:#EF7D00;
+  --shadow:0 8px 24px rgba(15,35,55,.08);
+}
+body{
+  background:#F3F6F9;
+  color:var(--text);
+}
+header{
+  background:rgba(255,255,255,.96);
+  border-bottom:1px solid var(--border);
+  box-shadow:none;
+  padding:16px 28px;
+}
+.logo{
+  width:128px;
+}
+.logo .top{
+  font-size:20px;
+  padding:11px 8px;
+}
+.logo .bottom{
+  font-size:10px;
+  padding:7px 6px;
+}
+.brand{
+  gap:18px;
+}
+.brand h1{
+  font-size:32px;
+  letter-spacing:-.8px;
+  color:#073B57;
+}
+.brand p{
+  font-size:15px;
+  color:var(--muted);
+}
+.nav{
+  gap:10px;
+}
+.nav button,
+.nav-drop-btn{
+  border-radius:999px;
+  padding:11px 17px;
+  box-shadow:none;
+  background:#EDF2F7;
+  color:#102033;
+}
+.nav .btn-red{
+  background:var(--red);
+  color:white;
+}
+.nav-dropdown{
+  position:relative;
+}
+.nav-dropdown-menu{
+  position:absolute;
+  right:0;
+  top:48px;
+  min-width:180px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:8px;
+  box-shadow:0 18px 50px rgba(15,35,55,.18);
+  z-index:100;
+}
+.nav-dropdown-menu button{
+  display:block;
+  width:100%;
+  text-align:left;
+  background:white;
+  box-shadow:none;
+  border-radius:12px;
+  padding:11px 12px;
+}
+.nav-dropdown-menu button:hover{
+  background:#F1F5F9;
+}
+main{
+  max-width:1600px;
+  margin:0 auto;
+  padding:28px;
+  padding-bottom:90px;
+}
+.card,.tile,.kpi,.home-preview,.toolbar{
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  border-radius:22px;
+  background:white;
+}
+.toolbar{
+  padding:12px;
+}
+.card{
+  padding:24px;
+}
+.tile{
+  min-height:165px;
+}
+.tile:after{
+  display:none;
+}
+.tile:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 34px rgba(15,35,55,.12);
+}
+button{
+  box-shadow:none!important;
+}
+.btn,.btn-light,.btn-red,.btn-green,.btn-orange{
+  border-radius:999px;
+}
+input,select,textarea{
+  border-color:var(--border);
+  border-radius:14px;
+}
+.table-wrap{
+  border-color:var(--border);
+  border-radius:18px;
+}
+table{
+  background:white;
+}
+th{
+  background:#073B57;
+  font-size:14px;
+}
+td{
+  background:white;
+}
+th,td{
+  border-color:#E8EDF3;
+}
+th:first-child,td:first-child{
+  background:#F1F5F9;
+}
+.bubble{
+  border-radius:14px;
+  box-shadow:none;
+}
+.drawer{
+  box-shadow:-12px 0 40px rgba(15,35,55,.16);
+}
+.modal{
+  border-radius:26px;
+  box-shadow:0 25px 80px rgba(15,35,55,.25);
+}
+.kpi strong{
+  color:#073B57;
+}
+.footer{
+  border-color:var(--border);
+  box-shadow:var(--shadow);
+}
+.om-topbar{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:18px 20px;
+  box-shadow:var(--shadow);
+}
+.om-topbar h2{
+  margin:0;
+  color:#073B57;
+}
+@media(max-width:1200px){
+  .nav-dropdown,.nav-dropdown-menu{width:100%}
+  .nav-dropdown-menu{position:static;margin-top:8px}
+}
+
+
+/* --- Accueil professionnel --- */
+#page-home .home-hero{
+  grid-template-columns:1.15fr .85fr;
+  gap:22px;
+}
+#page-home .card:first-child{
+  background:linear-gradient(135deg,#FFFFFF 0%,#F8FBFD 100%);
+  border-left:5px solid var(--blue);
+}
+#page-home .card:first-child h2{
+  font-size:30px;
+  color:#073B57;
+  margin-bottom:8px;
+}
+#page-home .card:first-child p{
+  color:var(--muted);
+  font-size:16px;
+  max-width:760px;
+}
+.home-summary{
+  margin-top:22px;
+}
+.home-summary .kpi{
+  border-radius:18px;
+  background:#FFFFFF;
+  border:1px solid #E3E8EF;
+}
+.home-summary .kpi strong{
+  font-size:32px;
+}
+.home-preview{
+  background:#FFFFFF;
+}
+.home-preview h3{
+  font-size:22px;
+  color:#073B57;
+}
+.mini-row{
+  background:#F8FAFC;
+  border-left:4px solid var(--blue);
+}
+.pro-home-grid{
+  grid-template-columns:repeat(3,minmax(260px,1fr));
+  gap:22px;
+}
+.pro-tile{
+  min-height:210px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:28px;
+  position:relative;
+  overflow:hidden;
+}
+.pro-tile:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,rgba(0,91,132,.06),transparent 45%);
+  pointer-events:none;
+}
+.pro-tile h2{
+  font-size:24px;
+  color:#073B57;
+  margin-top:18px;
+}
+.pro-tile p{
+  color:var(--muted);
+  line-height:1.45;
+  font-size:15px;
+  margin-bottom:24px;
+}
+.tile-marker{
+  width:42px;
+  height:6px;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--blue),var(--red));
+}
+.tile-link{
+  display:inline-flex;
+  align-self:flex-start;
+  color:var(--blue);
+  font-weight:900;
+  border-bottom:2px solid rgba(0,91,132,.22);
+  padding-bottom:3px;
+}
+.pro-tile:hover .tile-link{
+  border-color:var(--blue);
+}
+@media(max-width:1000px){
+  #page-home .home-hero,
+  .pro-home-grid{
+    grid-template-columns:1fr;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -212,13 +607,19 @@ th:first-child,td:first-child{position:sticky;left:0;background:#EDF2F6;color:#1
 <header>
   <div class="brand">
     <div class="logo"><div class="top">UIMM Brest</div><div class="bottom">LA FABRIQUE<br>DE L’AVENIR</div></div>
-    <div><h1>Plateforme Atelier</h1><p>Réservations, formations et GMAO connectées</p></div>
+    <div><h1>Plateforme Atelier</h1><p>Réservations, formations et OM connectés</p></div>
   </div>
   <div class="nav">
     <button class="btn-light" onclick="showPage('home')">Accueil</button>
     <button class="btn-light" onclick="showPage('reservation')">Planning réservation</button>
     <button class="btn-light" onclick="showPage('formation')">Planning formateurs</button>
-    <button class="btn-light" onclick="showPage('gmao')">Gamme</button>
+    <div class="nav-dropdown">
+      <button class="btn-light nav-drop-btn" onclick="toggleOmMenu()">OM ▾</button>
+      <div id="omNavMenu" class="nav-dropdown-menu hidden">
+        <button onclick="openOmMode('om')">OM</button>
+        <button onclick="openOmMode('history')">Historique</button>
+      </div>
+    </div>
     <button class="btn-light" onclick="showPage('settings')">Paramètres</button>
     <button class="btn-light" onclick="showPage('creators')">Créateurs</button>
     <button class="btn-red" onclick="deconnexion()">Déconnexion</button>
@@ -243,10 +644,25 @@ th:first-child,td:first-child{position:sticky;left:0;background:#EDF2F6;color:#1
       <div id="homePreviewList" class="mini-list"></div>
     </div>
   </div>
-  <div class="home-grid">
-    <div class="tile" onclick="showPage('reservation')"><div class="icon">📅</div><h2>Planning réservation</h2><p>Réserver une zone, une classe, un ou plusieurs formateurs et les machines associées.</p></div>
-    <div class="tile" onclick="showPage('formation')"><div class="icon">👨‍🏫</div><h2>Planning formateurs</h2><p>Voir les formations prévues par semaine, avec détail complet au clic.</p></div>
-    <div class="tile" onclick="showPage('gmao')"><div class="icon">🛠️</div><h2>Gamme</h2><p>Mini-GMAO : machines, maintenances préventives/correctives et historique.</p></div>
+  <div class="home-grid pro-home-grid">
+    <div class="tile pro-tile" onclick="showPage('reservation')">
+      <div class="tile-marker"></div>
+      <h2>Planning réservation</h2>
+      <p>Gestion des réservations d’atelier par zone, classe, formateur et machine.</p>
+      <span class="tile-link">Ouvrir le planning</span>
+    </div>
+    <div class="tile pro-tile" onclick="showPage('formation')">
+      <div class="tile-marker"></div>
+      <h2>Planning formateurs</h2>
+      <p>Suivi hebdomadaire des formations, des intervenants et des contenus pédagogiques.</p>
+      <span class="tile-link">Consulter les formations</span>
+    </div>
+    <div class="tile pro-tile" onclick="openOmMode('om')">
+      <div class="tile-marker"></div>
+      <h2>Ordres de maintenance</h2>
+      <p>Suivi du parc machines, des OM en cours et de l’historique des interventions.</p>
+      <span class="tile-link">Accéder aux OM</span>
+    </div>
   </div>
 </section>
 
@@ -279,20 +695,45 @@ th:first-child,td:first-child{position:sticky;left:0;background:#EDF2F6;color:#1
 </section>
 
 <section id="page-gmao" class="hidden">
-  <div class="toolbar">
+  <div class="om-topbar">
+    <div>
+      <h2 id="omPageTitle">Ordres de maintenance</h2>
+      <p class="om-subtitle" id="omPageSubtitle">Vue machines avec disponibilité, dernier OM et accès au détail.</p>
+    </div>
+    <button class="btn-green" onclick="openMaintenanceForm()">＋ Ajouter OM</button>
+  </div>
+  <input type="hidden" id="gmaoViewMode" value="om">
+
+  <div class="toolbar" id="gmaoToolbar">
     <select id="gmaoZoneFilter" onchange="renderGmao()"></select>
     <input id="gmaoSearch" placeholder="Rechercher une machine..." oninput="renderGmao()">
-    <button class="btn-green" onclick="openMaintenanceForm()">＋ Ajouter maintenance</button>
   </div>
+
   <div class="kpi-grid">
     <div class="kpi"><strong id="kpiMachines">0</strong>Machines</div>
-    <div class="kpi"><strong id="kpiMaint">0</strong>Maintenances</div>
+    <div class="kpi"><strong id="kpiMaint">0</strong>OM total</div>
     <div class="kpi"><strong id="kpiPrev">0</strong>Préventives</div>
     <div class="kpi"><strong id="kpiCorr">0</strong>Correctives</div>
   </div>
-  <div class="card">
-    <h2>Parc machines & mini-GMAO</h2>
+
+  <div id="gmaoOmView" class="card">
+    <div class="card-title">
+      <div>
+        <h2>Ordres de maintenance</h2>
+        <p class="om-subtitle">Vue machines avec disponibilité, dernier OM et accès au détail.</p>
+      </div>
+    </div>
     <div class="table-wrap"><table id="gmaoTable"></table></div>
+  </div>
+
+  <div id="gmaoHistoryView" class="card hidden">
+    <div class="card-title">
+      <div>
+        <h2>Historique des OM</h2>
+        <p class="om-subtitle">Liste complète des maintenances à faire, en cours et terminées.</p>
+      </div>
+    </div>
+    <div class="table-wrap"><table id="gmaoHistoryTable"></table></div>
   </div>
 </section>
 
@@ -389,7 +830,7 @@ th:first-child,td:first-child{position:sticky;left:0;background:#EDF2F6;color:#1
   <div id="maintenanceForm" class="hidden">
     <input type="hidden" id="maintenanceId">
     <label>Machine</label><select id="maintenanceMachine"></select>
-    <label>Type</label><select id="maintenanceType" onchange="toggleMaintenanceMode()"><option>Préventive</option><option>Corrective</option><option>Contrôle sécurité</option><option>Amélioration</option></select>
+    <label>Type OM</label><select id="maintenanceType" onchange="toggleMaintenanceMode()"><option>Préventive</option><option>Corrective</option><option>Contrôle sécurité</option><option>Amélioration</option></select>
 
     <div id="maintenanceDateBlock">
       <label>Date</label><input id="maintenanceDate" type="date">
@@ -412,7 +853,7 @@ th:first-child,td:first-child{position:sticky;left:0;background:#EDF2F6;color:#1
     <label>Statut</label><select id="maintenanceStatus"><option>À faire</option><option>En cours</option><option>Terminé</option></select>
     <label>Intervenant</label><input id="maintenanceTech">
     <label>Description</label><textarea id="maintenanceDesc" placeholder="Exemple : graissage, contrôle courroie, vidange..."></textarea>
-    <button class="btn-green" onclick="saveMaintenance()">Enregistrer maintenance</button>
+    <button class="btn-green" onclick="saveMaintenance()">Enregistrer OM</button>
     <button class="btn-red" onclick="deleteMaintenanceFromForm()">Supprimer</button>
   </div>
   <div id="settingsForm" class="hidden">
@@ -963,9 +1404,119 @@ function gmaoSortValue(machine, key){
   return "";
 }
 
+
+function statusClass(status){
+  if(status==="Terminé") return "status-done";
+  if(status==="En cours") return "status-progress";
+  return "status-todo";
+}
+
+function omDateLabel(item){
+  if(item.type==="Préventive"){
+    return item.startDate || item.nextDue || item.date || "-";
+  }
+  return item.date || "-";
+}
+
+function renderGmaoHistory(){
+  const q=(gmaoSearch.value||"").toLowerCase();
+  const z=gmaoZoneFilter.value;
+
+  let rows=state.maintenance.map(m=>{
+    const machine=state.machines.find(x=>x.nom===m.machine) || {};
+    return {...m, zone:machine.zone||"", atelier:machine.atelier||"", machineType:machine.type||""};
+  }).filter(m=>
+    (!z || m.zone===z) &&
+    (!q ||
+      String(m.machine||"").toLowerCase().includes(q) ||
+      String(m.type||"").toLowerCase().includes(q) ||
+      String(m.status||"").toLowerCase().includes(q) ||
+      String(m.desc||"").toLowerCase().includes(q) ||
+      String(m.tech||"").toLowerCase().includes(q)
+    )
+  );
+
+  rows.sort((a,b)=>String(omDateLabel(b)).localeCompare(String(omDateLabel(a))));
+
+  let html="<tr>"+
+    "<th>Statut</th>"+
+    "<th>Date / rappel</th>"+
+    "<th>Machine</th>"+
+    "<th>Zone</th>"+
+    "<th>Type OM</th>"+
+    "<th>Intervenant</th>"+
+    "<th>Description</th>"+
+    "<th>Actions</th>"+
+    "</tr>";
+
+  rows.forEach(m=>{
+    html+=`<tr>
+      <td><span class="status-pill ${statusClass(m.status)}">${esc(m.status||"À faire")}</span></td>
+      <td>${esc(omDateLabel(m))}${m.type==="Préventive"?`<br><small>Tous les ${esc(m.everyNumber||1)} ${esc(m.everyUnit||"mois")}</small>`:""}</td>
+      <td><b>${esc(m.machine||"-")}</b><br><small>${esc(m.atelier||"")}</small></td>
+      <td>${esc(m.zone||"-")}</td>
+      <td>${esc(m.type||"-")}</td>
+      <td>${esc(m.tech||"-")}</td>
+      <td class="history-desc">${esc(m.desc||"-")}</td>
+      <td class="history-actions"><button class="btn-light" onclick="openMaintenanceForm('${m.id}')">Modifier</button></td>
+    </tr>`;
+  });
+
+  if(!rows.length){
+    html+=`<tr><td colspan="8">Aucun OM trouvé.</td></tr>`;
+  }
+
+  gmaoHistoryTable.innerHTML=html;
+}
+
+
+function toggleOmMenu(){
+  omNavMenu.classList.toggle("hidden");
+}
+
+function openOmMode(mode){
+  if(document.getElementById("gmaoViewMode")){
+    gmaoViewMode.value=mode;
+  }
+  if(document.getElementById("omNavMenu")){
+    omNavMenu.classList.add("hidden");
+  }
+  showPage("gmao");
+  renderGmao();
+}
+
+document.addEventListener("click",function(e){
+  const dd=document.querySelector(".nav-dropdown");
+  if(dd && !dd.contains(e.target) && document.getElementById("omNavMenu")){
+    omNavMenu.classList.add("hidden");
+  }
+});
+
 function renderGmao(){
+  const mode=document.getElementById("gmaoViewMode") ? gmaoViewMode.value : "om";
+  if(document.getElementById("omPageTitle")){
+    omPageTitle.textContent = mode==="history" ? "Historique des OM" : "Ordres de maintenance";
+    omPageSubtitle.textContent = mode==="history"
+      ? "Liste complète des maintenances à faire, en cours et terminées."
+      : "Vue machines avec disponibilité, dernier OM et accès au détail.";
+  }
   const z=gmaoZoneFilter.value;
   const q=(gmaoSearch.value||"").toLowerCase();
+
+  kpiMachines.textContent=state.machines.length;
+  kpiMaint.textContent=state.maintenance.length;
+  kpiPrev.textContent=state.maintenance.filter(m=>m.type==="Préventive").length;
+  kpiCorr.textContent=state.maintenance.filter(m=>m.type==="Corrective").length;
+
+  if(document.getElementById("gmaoOmView")){
+    gmaoOmView.classList.toggle("hidden", mode!=="om");
+    gmaoHistoryView.classList.toggle("hidden", mode!=="history");
+  }
+
+  if(mode==="history"){
+    renderGmaoHistory();
+    return;
+  }
 
   let ms=state.machines.filter(m=>
     (!z||m.zone===z) &&
@@ -993,17 +1544,12 @@ function renderGmao(){
     return gmaoSort.dir==="asc" ? result : -result;
   });
 
-  kpiMachines.textContent=state.machines.length;
-  kpiMaint.textContent=state.maintenance.length;
-  kpiPrev.textContent=state.maintenance.filter(m=>m.type==="Préventive").length;
-  kpiCorr.textContent=state.maintenance.filter(m=>m.type==="Corrective").length;
-
   let html="<tr>"+
     `<th class="sortable-th" onclick="setGmaoSort('zone')">Zone ${gmaoSortIcon('zone')}</th>`+
     `<th class="sortable-th" onclick="setGmaoSort('nom')">Machine ${gmaoSortIcon('nom')}</th>`+
     `<th class="sortable-th" onclick="setGmaoSort('atelier')">Atelier ${gmaoSortIcon('atelier')}</th>`+
     `<th class="sortable-th" onclick="setGmaoSort('type')">Type ${gmaoSortIcon('type')}</th>`+
-    `<th class="sortable-th" onclick="setGmaoSort('maintenance')">Maintenance ${gmaoSortIcon('maintenance')}</th>`+
+    `<th class="sortable-th" onclick="setGmaoSort('maintenance')">Dernier OM ${gmaoSortIcon('maintenance')}</th>`+
     "<th>Disponibilité aujourd’hui</th>"+
     "<th>Actions</th></tr>";
 
@@ -1024,13 +1570,17 @@ function renderGmao(){
     </tr>`;
   });
 
+  if(!ms.length){
+    html+=`<tr><td colspan="7">Aucune machine trouvée.</td></tr>`;
+  }
+
   gmaoTable.innerHTML=html;
 }
 
 function openMaintenanceForm(id=null,machine=null){
   closeModal();
   drawer.classList.add("open");
-  drawerTitle.textContent=id?"Modifier maintenance":"Ajouter maintenance";
+  drawerTitle.textContent=id?"Modifier OM":"Ajouter OM";
   reservationForm.classList.add("hidden");
   trainingForm.classList.add("hidden");
   maintenanceForm.classList.remove("hidden");
@@ -1103,7 +1653,7 @@ function showMachineDetail(name){
         <div class="detail-label">Type</div><div>${esc(m?.type)}</div>
         <div class="detail-label">Disponibilité</div><div>${machineAvailabilityDayHtml(name)}</div>
       </div>
-      <h3>Rappels et maintenances</h3>
+      <h3>Historique OM</h3>
       ${hist.length?hist.map(h=>`
         <div class="list-item">
           <div>
@@ -1117,7 +1667,7 @@ function showMachineDetail(name){
             <button class="btn-light" onclick="openMaintenanceForm('${h.id}')">Modifier</button>
           </div>
         </div>`).join(""):"<p>Aucune maintenance enregistrée.</p>"}
-      <button class="btn-green" onclick="openMaintenanceForm(null,'${safeJsArg(name)}')">Ajouter maintenance</button>
+      <button class="btn-green" onclick="openMaintenanceForm(null,'${safeJsArg(name)}')">Ajouter OM</button>
       <button class="btn-light" onclick="closeModal()">Fermer</button>
     </div>
     <div>${photoHtml}</div>
