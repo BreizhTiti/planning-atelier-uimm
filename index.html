@@ -533,7 +533,7 @@ th:first-child,td:first-child{
   background:#F8FAFC;
   border-left:4px solid var(--blue);
 }
-.pro-home-grid{grid-template-columns:repeat(4,minmax(250px,1fr));gap:22px;}
+.pro-home-grid{grid-template-columns:repeat(3,minmax(260px,1fr));gap:22px;}
 .pro-tile{
   min-height:210px;
   display:flex;
@@ -643,9 +643,9 @@ th:first-child,td:first-child{
       <div id="omNavMenu" class="nav-dropdown-menu hidden">
         <button onclick="openOmMode('om')">OM</button>
         <button onclick="openOmMode('history')">Historique</button>
+        <button onclick="openOmMode('statistics')">Statistiques</button>
       </div>
     </div>
-    <button class="btn-orange" onclick="showPage('statistics')">Statistiques</button>
     <button class="btn-light" onclick="showPage('settings')">Paramètres</button>
     <button class="btn-light" onclick="showPage('creators')">Créateurs</button>
     <button class="btn-red" onclick="deconnexion()">Déconnexion</button>
@@ -671,12 +671,6 @@ th:first-child,td:first-child{
     </div>
   </div>
   <div class="home-grid pro-home-grid">
-    <div class="tile pro-tile" onclick="showPage('statistics')">
-      <div class="tile-marker"></div>
-      <h2>Statistiques</h2>
-      <p>Analyse des interventions, indicateurs de maintenance, taux de préventif et suivi des performances.</p>
-      <span class="tile-link">Voir les statistiques</span>
-    </div>
 
     <div class="tile pro-tile" onclick="showPage('reservation')">
       <div class="tile-marker"></div>
@@ -815,12 +809,12 @@ th:first-child,td:first-child{
   </div>
 
   <div class="card">
-    <h2>🟢 Temps passé sur les préventifs par machine</h2>
+    <h2>🟢 Temps à prévoir par machine</h2>
     <div id="preventiveTimeByMachine"></div>
   </div>
 
   <div class="card">
-    <h2>🔴 Temps passé sur les correctifs par machine</h2>
+    <h2>🔴 Heures d'arrêt par machine</h2>
     <div id="correctiveTimeByMachine"></div>
   </div>
 
@@ -945,9 +939,9 @@ th:first-child,td:first-child{
     </div>
 
     <label>Statut</label><select id="maintenanceStatus"><option>À faire</option><option>En cours</option><option>Terminé</option></select>
-    <label>Heures de panne</label><input id="maintenanceDowntime" type="number" min="0" step="0.25" placeholder="Ex : 2.5">
-    <label>Temps passé sur le préventif</label><input id="maintenancePreventiveTime" type="number" min="0" step="0.25" placeholder="Ex : 1.5">
-    <label>Temps passé sur le correctif</label><input id="maintenanceCorrectiveTime" type="number" min="0" step="0.25" placeholder="Ex : 2">
+    <label id="maintenanceDowntimeLabel">Heures d'arrêt</label><input id="maintenanceDowntime" type="number" min="0" step="0.25" placeholder="Ex : 2.5">
+    <label id="maintenancePlannedTimeLabel">Temps à prévoir</label><input id="maintenancePreventiveTime" type="number" min="0" step="0.25" placeholder="Ex : 1.5">
+    <input id="maintenanceCorrectiveTime" type="hidden" value="">
     <label>Intervenant</label><input id="maintenanceTech">
     <label>Description</label><textarea id="maintenanceDesc" placeholder="Exemple : graissage, contrôle courroie, vidange..."></textarea>
     <button class="btn-green" onclick="saveMaintenance()">Enregistrer OM</button>
@@ -1246,7 +1240,7 @@ function renderStatistics(){
   filtered.forEach(m=>{const type=m.type||"Autre";byType[type]=(byType[type]||0)+1});
   maintenanceByType.innerHTML=Object.entries(byType).map(([type,count])=>`<div class="stat-row"><div><span class="type-badge type-${type.toLowerCase().replace(" ","-")}">${esc(type)}</span></div><div class="stat-bar"><div class="stat-bar-fill" style="width:${(count/(Math.max(...Object.values(byType),1)))*100}%">${count}</div></div></div>`).join("");
 
-  // Temps passé sur les préventifs par machine
+  // Temps à prévoir par machine
   const preventiveMachineStats={};
   prev.forEach(m=>{
     const name=m.machine||"Machine non renseignée";
@@ -1256,7 +1250,7 @@ function renderStatistics(){
   const maxPreventiveHours=Math.max(...preventiveMachineArr.map(([,v])=>v),1);
   preventiveTimeByMachine.innerHTML=preventiveMachineArr.length?preventiveMachineArr.map(([name,hours])=>`<div class="stat-row"><div style="font-weight:700">${esc(name)}</div><div class="stat-bar"><div class="stat-bar-fill" style="width:${(hours/maxPreventiveHours)*100}%">${formatHours(hours)}</div></div></div>`).join(""):"<p>Aucun temps préventif enregistré pour cette période.</p>";
 
-  // Temps passé sur les correctifs par machine
+  // Heures d'arrêt par machine
   const correctiveMachineStats={};
   corr.forEach(m=>{
     const name=m.machine||"Machine non renseignée";
@@ -1268,7 +1262,7 @@ function renderStatistics(){
 
   // Maintenances récentes
   const recent=filtered.sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,10);
-  recentMaintenance.innerHTML=recent.length?recent.map(m=>`<div class="stat-row"><div><b>${esc(m.machine)}</b><br><small>${esc(m.date)} · ${esc(m.type)}${m.type==="Préventive"?" · Temps préventif : "+formatHours(m.preventiveTimeHours||0):""}${m.type==="Corrective"?" · Temps correctif : "+formatHours(m.correctiveTimeHours||0):""}</small></div><div><span class="badge">${esc(m.status)}</span></div></div>`).join(""):"<p>Aucune maintenance enregistrée pour cette période.</p>";
+  recentMaintenance.innerHTML=recent.length?recent.map(m=>`<div class="stat-row"><div><b>${esc(m.machine)}</b><br><small>${esc(m.date)} · ${esc(m.type)}${m.type==="Préventive"?" · Temps à prévoir : "+formatHours(m.preventiveTimeHours||0):""}${m.type==="Corrective"?" · Heures d'arrêt : "+formatHours(m.correctiveTimeHours||0):""}</small></div><div><span class="badge">${esc(m.status)}</span></div></div>`).join(""):"<p>Aucune maintenance enregistrée pour cette période.</p>";
 }
 
 
@@ -1319,9 +1313,28 @@ function getNextDueFromStart(startDate, number, unit){
 
 function toggleMaintenanceMode(){
   if(!document.getElementById("maintenanceType")) return;
-  const isPreventive=maintenanceType.value==="Préventive";
+
+  const type=maintenanceType.value;
+  const isPreventive=type==="Préventive";
+  const isCorrective=type==="Corrective";
+
   if(document.getElementById("maintenanceDateBlock")) maintenanceDateBlock.classList.toggle("hidden", isPreventive);
   if(document.getElementById("maintenancePreventiveBlock")) maintenancePreventiveBlock.classList.toggle("hidden", !isPreventive);
+
+  if(document.getElementById("maintenanceDowntimeLabel")) maintenanceDowntimeLabel.classList.toggle("hidden", !isCorrective);
+  if(document.getElementById("maintenanceDowntime")) maintenanceDowntime.classList.toggle("hidden", !isCorrective);
+
+  if(document.getElementById("maintenancePlannedTimeLabel")) maintenancePlannedTimeLabel.classList.toggle("hidden", isCorrective);
+  if(document.getElementById("maintenancePreventiveTime")) maintenancePreventiveTime.classList.toggle("hidden", isCorrective);
+
+  if(isCorrective){
+    maintenancePreventiveTime.value="";
+    if(document.getElementById("maintenanceCorrectiveTime")) maintenanceCorrectiveTime.value="";
+  }else{
+    maintenanceDowntime.value="";
+    if(document.getElementById("maintenanceCorrectiveTime")) maintenanceCorrectiveTime.value="";
+  }
+
   if(isPreventive && document.getElementById("maintenanceStartDate") && !maintenanceStartDate.value){
     maintenanceStartDate.value=iso(new Date());
   }
@@ -1711,14 +1724,18 @@ function toggleOmMenu(){
 }
 
 function openOmMode(mode){
-  if(document.getElementById("gmaoViewMode")){
-    gmaoViewMode.value=mode;
+  const menu=document.getElementById("omNavMenu");
+  if(menu) menu.classList.add("hidden");
+
+  if(mode==="statistics"){
+    showPage("statistics");
+    return;
   }
-  if(document.getElementById("omNavMenu")){
-    omNavMenu.classList.add("hidden");
-  }
+
+  const input=document.getElementById("gmaoViewMode");
+  if(input) input.value=mode || "om";
   showPage("gmao");
-  renderGmao();
+  if(typeof renderGmao==="function") renderGmao();
 }
 
 document.addEventListener("click",function(e){
@@ -1829,9 +1846,9 @@ function openMaintenanceForm(id=null,machine=null){
   maintenanceType.value=m?.type||"Préventive";
   maintenanceDate.value=m?.date||iso(new Date());
   maintenanceStatus.value=m?.status||"À faire";
-  maintenanceDowntime.value=m?.downtimeHours??"";
+  maintenanceDowntime.value=m?.downtimeHours??m?.correctiveTimeHours??"";
   maintenancePreventiveTime.value=m?.preventiveTimeHours??"";
-  maintenanceCorrectiveTime.value=m?.correctiveTimeHours??"";
+  maintenanceCorrectiveTime.value="";
   maintenanceTech.value=m?.tech||"";
   maintenanceDesc.value=m?.desc||"";
 
@@ -1856,9 +1873,9 @@ function saveMaintenance(){
     type:maintenanceType.value,
     date:isPreventive ? "" : maintenanceDate.value,
     status:maintenanceStatus.value,
-    downtimeHours:Number(maintenanceDowntime.value||0),
-    preventiveTimeHours:Number(maintenancePreventiveTime.value||0),
-    correctiveTimeHours:Number(maintenanceCorrectiveTime.value||0),
+    downtimeHours:isPreventive || (maintenanceType.value!=="Corrective") ? 0 : Number(maintenanceDowntime.value||0),
+    preventiveTimeHours:maintenanceType.value==="Corrective" ? 0 : Number(maintenancePreventiveTime.value||0),
+    correctiveTimeHours:0,
     tech:maintenanceTech.value,
     desc:maintenanceDesc.value
   };
@@ -2049,5 +2066,81 @@ function donation(amount){
 function closeDrawer(){drawer.classList.remove("open");}
 function closeModal(e){if(!e||e.target.id==="modalBackdrop")modalBackdrop.classList.remove("open");}
 </script>
+
+<script id="om-hour-label-simple-fix">
+(function(){
+  function getTypeEl(){
+    return document.getElementById("maintType")
+      || document.getElementById("maintenanceType")
+      || document.querySelector("select[name='type']");
+  }
+
+  function currentHourLabel(){
+    const el=getTypeEl();
+    const v=(el && el.value ? el.value : "").toLowerCase();
+    return v.includes("corr") ? "Heures faites" : "Heures à faire";
+  }
+
+  function isHourField(el){
+    const label=el.closest("label");
+    const text=[
+      el.id || "",
+      el.name || "",
+      el.placeholder || "",
+      label ? label.textContent : ""
+    ].join(" ").toLowerCase();
+
+    return (
+      (text.includes("heure") || text.includes("temps") || text.includes("hour")) &&
+      !text.includes("date") &&
+      !text.includes("type")
+    );
+  }
+
+  function setLabel(label, text){
+    if(!label) return;
+    const textNode=[...label.childNodes].find(n => n.nodeType===3 && n.textContent.trim());
+    if(textNode){
+      textNode.textContent=text;
+    }else{
+      label.insertBefore(document.createTextNode(text), label.firstChild);
+    }
+  }
+
+  window.updateOmHourLabel=function(){
+    const fields=[...document.querySelectorAll("input,select,textarea")].filter(isHourField);
+    const label=currentHourLabel();
+
+    fields.forEach((field, index)=>{
+      const wrapper=field.closest("label") || field.parentElement;
+      if(index===0){
+        if(wrapper) wrapper.classList.remove("hidden");
+        field.disabled=false;
+        field.placeholder=label;
+        setLabel(field.closest("label"), label);
+      }else{
+        if(wrapper) wrapper.classList.add("hidden");
+        field.disabled=true;
+      }
+    });
+  };
+
+  document.addEventListener("change", function(e){
+    if(e.target===getTypeEl()){
+      setTimeout(window.updateOmHourLabel, 0);
+    }
+  });
+
+  const oldOpen=window.openMaintenanceForm;
+  if(typeof oldOpen==="function"){
+    window.openMaintenanceForm=function(){
+      oldOpen.apply(this, arguments);
+      setTimeout(window.updateOmHourLabel, 0);
+      setTimeout(window.updateOmHourLabel, 100);
+    };
+  }
+})();
+</script>
+
 </body>
 </html>
